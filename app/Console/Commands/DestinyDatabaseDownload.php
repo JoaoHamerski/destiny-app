@@ -38,7 +38,7 @@ class DestinyDatabaseDownload extends Command
      * @return mixed
      */
     public function handle()
-    {
+    {   
         $destinyClient = new Destiny();
 
         if ($destinyClient->getStatusCode() !== 200) {
@@ -62,7 +62,6 @@ class DestinyDatabaseDownload extends Command
             $this->info("Downloading \"$lang\" database file...");
             \Helper::file_fput_contents($filePath, file_get_contents($dbURI . $dbFilepath));
 
-
             $zip = new \ZipArchive();
 
             if ($zip->open($filePath) === TRUE) {
@@ -71,6 +70,11 @@ class DestinyDatabaseDownload extends Command
             } else {
                 $this->error('Error to extract the file');
             }
+
+            \DB::table('databases')->updateOrInsert(
+                ['lang' => $lang],
+                ['filename' => Destiny::getDatabaseFilename($dbFilepath)]
+            );
         }
 
         $bar->finish();

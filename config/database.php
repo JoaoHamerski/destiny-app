@@ -37,8 +37,8 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
-            'prefix' => '',
+            'database' => '/home/joaohamerski/Desktop/destiny-app/public/cache/databases/pt-br/world_sql_content_01800c58886fe7ba33de54aad62d76d7.content
+',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
