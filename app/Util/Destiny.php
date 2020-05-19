@@ -11,16 +11,16 @@ class Destiny
 	public function __construct()
 	{
 		$this->client = resolve(\GuzzleHttp\Client::class);
-		$this->storagePath = self::isCLI() 
+		$this->storagePath = $this->isCLI() 
 			? $_SERVER['PWD'] . config('database.sqlite.storage_path')
 			: $_SERVER['DOCUMENT_ROOT'] . '/..' . config('database.sqlite.storage_path');
 
-		$this->cachePath = self::isCLI() 
+		$this->cachePath = $this->isCLI() 
 			? $_SERVER['PWD'] . config('database.sqlite.cache_path')
 			: $_SERVER['DOCUMENT_ROOT'] . '/..' .  config('database.sqlite.cache_path');
 	}
 
-	public static function isCLI() 
+	public function isCLI() 
 	{
 		return http_response_code() === false;
 	}
@@ -60,13 +60,6 @@ class Destiny
 		$manifest = $this->getManifest();
 
 		return $manifest->Response->mobileWorldContentPaths;
-	}
-
-	public function getDatabaseFilepath($lang) 
-	{
-		$filepaths = (array) $this->getDatabaseFilepaths();
-
-		return [$lang => $this->getDatabaseFilename($filepaths[$lang])];
 	}
 
 	public static function getDatabaseFilename($filepath) 

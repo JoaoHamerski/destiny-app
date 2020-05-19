@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', 'ItensController@index');
+Route::get('/{lang}', 'ItensController@index');
