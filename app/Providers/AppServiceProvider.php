@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Util\DB;
 use GuzzleHttp\Client;
 use Illuminate\Support\ServiceProvider;
 

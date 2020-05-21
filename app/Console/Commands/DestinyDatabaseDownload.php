@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Util\Destiny;
 use GuzzleHttp\Client;
+use App\Util\ApiManager;
 use Illuminate\Console\Command;
 
 class DestinyDatabaseDownload extends Command
@@ -39,22 +39,22 @@ class DestinyDatabaseDownload extends Command
      */
     public function handle()
     {   
-        $destinyClient = new Destiny();
+        $apiManager = new ApiManager();
 
-        if ($destinyClient->getStatusCode() !== 200) {
-            $this->error('HTTP ERROR: ' . $destinyClient->getStatusCode());
+        if ($apiManager->getStatusCode() !== 200) {
+            $this->error('HTTP ERROR: ' . $apiManager->getStatusCode());
             die();
         }
 
         $dbURI = 'https://www.bungie.net';
-        $dbFilepaths = $destinyClient->getDatabaseFilepaths();
+        $dbFilepaths = $apiManager->getDatabaseFilepaths();
 
         $bar = $this->output->createProgressbar(count((array) $dbFilepaths));
 
         foreach($dbFilepaths as $lang => $dbFilepath) {
 
-            $storagePath = $destinyClient->getStoragePath($lang);
-            $filePath = $destinyClient->getFilepath($storagePath, $dbFilepath);
+            $storagePath = $apiManager->getStoragePath($lang);
+            $filePath = $apiManager->getFilepath($storagePath, $dbFilepath);
 
             $this->line('');
             $bar->advance();
@@ -65,7 +65,7 @@ class DestinyDatabaseDownload extends Command
             $zip = new \ZipArchive();
 
             if ($zip->open($filePath) === TRUE) {
-                $zip->extractTo($destinyClient->getCachePath($lang));
+                $zip->extractTo($apiManager->getCachePath($lang));
                 $zip->close();
             } else {
                 $this->error('Error to extract the file');
