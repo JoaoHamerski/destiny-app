@@ -15,7 +15,7 @@ class DestinyController extends Controller
     {
     	$DB = new DBHelper($lang);
 
-    	dd($DB->tables('DestinyRaceDefinition')->get());
+    	dd($DB->tables('*')->get());
 
     	return view('index', compact('items'));
     }

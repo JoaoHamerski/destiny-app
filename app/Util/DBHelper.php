@@ -91,15 +91,20 @@ class DBHelper
     }
 
     /**
-     * Retorna uma query de uma ou várias tabelas.
+     * Retorna uma query de uma ou várias tabelas
+     * unidas.
      * 
-     * @param  string $table
+     * @param  string $tables
      * @param  array  $key
      * 
      * @return Illuminate\Database\Query\Builder
      */
     public function tables($tables, $key = []) 
     {
+        if ($tables === "*") {
+            $tables = $this->getAllTableNames()->toArray();
+        }
+
         if (! is_array($tables)) {
 
             return $this->DB->table($tables);
@@ -110,26 +115,6 @@ class DBHelper
                 } else {
                     $query = $query->union($this->DB->table($table));
                 }
-            }
-        }
-
-        return $query;
-    }
-
-    /**
-     * Retorna uma query com a união das tabelas informadas.
-     * 
-     * @param  array $tables
-     * 
-     * @return Illuminate\Database\Query\Builder
-     */
-    public function unionTables($tables) 
-    {
-        foreach($tables as $key => $table) {
-            if ($key === 0) {
-                $query = $this->tables($table);
-            } else {
-                $query = $query->union($this->tables($table));
             }
         }
 
