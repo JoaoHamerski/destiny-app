@@ -73,7 +73,7 @@ class DestinyDatabaseDownload extends Command
 
             \DB::table('databases')->updateOrInsert(
                 ['lang' => $lang],
-                ['filename' => Destiny::getDatabaseFilename($dbFilepath)]
+                ['filename' => ApiManager::getDatabaseFilename($dbFilepath)]
             );
         }
 

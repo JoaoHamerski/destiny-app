@@ -74,9 +74,10 @@ class DBHelper
      * array da lista.
      * 
      * @param  int $key 
+     * 
      * @return Illuminate\Support\Collection 
      */
-    public function getTables($key = null) 
+    public function getAllTableNames($key = null) 
     {
         $tables = $this->DB
                 ->table('sqlite_master')
@@ -87,6 +88,52 @@ class DBHelper
                 ->pluck('name');
 
         return $key ? $tables[$key] : $tables;
+    }
+
+    /**
+     * Retorna uma query de uma ou várias tabelas.
+     * 
+     * @param  string $table
+     * @param  array  $key
+     * 
+     * @return Illuminate\Database\Query\Builder
+     */
+    public function tables($tables, $key = []) 
+    {
+        if (! is_array($tables)) {
+
+            return $this->DB->table($tables);
+        } else {
+            foreach($tables as $key => $table) {
+                if ($key === array_key_first($tables)) {
+                    $query = $this->DB->table($table);
+                } else {
+                    $query = $query->union($this->DB->table($table));
+                }
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Retorna uma query com a união das tabelas informadas.
+     * 
+     * @param  array $tables
+     * 
+     * @return Illuminate\Database\Query\Builder
+     */
+    public function unionTables($tables) 
+    {
+        foreach($tables as $key => $table) {
+            if ($key === 0) {
+                $query = $this->tables($table);
+            } else {
+                $query = $query->union($this->tables($table));
+            }
+        }
+
+        return $query;
     }
 
     /**

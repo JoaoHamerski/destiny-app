@@ -5,14 +5,18 @@
 namespace App\Http\Controllers;
 
 use App\Util\DBHelper;
-use App\Util\ApiManager;
 use Illuminate\Http\Request;
+use App\Util\CollectionHelper;
 
 class DestinyController extends Controller
 {
 
-    public function index($lang) 
+    public function index($lang = 'pt-br') 
     {
     	$DB = new DBHelper($lang);
+
+    	dd($DB->tables('DestinyRaceDefinition')->get());
+
+    	return view('index', compact('items'));
     }
 }
