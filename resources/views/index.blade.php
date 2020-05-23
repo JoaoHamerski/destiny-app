@@ -6,7 +6,7 @@
   
     <div class="card-group">
       @foreach($items as $item)
-        <div class="col-md-3 px-1 mb-2">
+        <div class="col-6 col-xs-6 col-md-3 px-1 mb-2">
           <div class="card item-card bg-secondary">
             <div class="row no-gutters">
               <div class="col-md-4">

@@ -1,7 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;600&display=swap');
-* {
-	font-family: 'Roboto', sans-serif !important;
-}
 
 @import 'variables';
 @import 'cards';
@@ -9,3 +6,13 @@
 
 // Libs
 @import '~bootstrap/scss/bootstrap';
+
+* {
+	font-family: 'Roboto', sans-serif !important;
+}
+
+@include media-breakpoint-down(md) {
+	* {
+		font-size: .85rem;
+	}
+}

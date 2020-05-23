@@ -1,10 +1,6 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto:wght@100;
 
 400;600&display=swap);@charset "UTF-8";
-* {
-  font-family: "Roboto", sans-serif !important;
-}
-
 .card.item-card .card-title {
   font-size: 0.9rem;
 }
@@ -10951,6 +10947,16 @@ a.text-dark:focus {
   .table .thead-dark th {
     color: inherit;
     border-color: #dee2e6;
+  }
+}
+
+* {
+  font-family: "Roboto", sans-serif !important;
+}
+
+@media (max-width: 991.98px) {
+  * {
+    font-size: 0.85rem;
   }
 }
 
