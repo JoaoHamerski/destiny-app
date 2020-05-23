@@ -28,6 +28,8 @@ class DBHelper
      */
     private $DB;
 
+    private $query;
+
     public function __construct($lang)
     {
         $this->apiManager = new ApiManager();
@@ -85,7 +87,8 @@ class DBHelper
                 ->where('type', 'table')
                 ->orderBy('name')
                 ->get()
-                ->pluck('name');
+                ->pluck('name')
+                ->toArray();
 
         return $key ? $tables[$key] : $tables;
     }
@@ -95,26 +98,50 @@ class DBHelper
      * unidas.
      * 
      * @param  string $tables
-     * @param  array  $key
      * 
      * @return Illuminate\Database\Query\Builder
      */
-    public function tables($tables, $key = []) 
+    public function tables($tables) 
     {
         if ($tables === "*") {
-            $tables = $this->getAllTableNames()->toArray();
+            $tables = $this->getAllTableNames();
         }
 
         if (! is_array($tables)) {
-
             return $this->DB->table($tables);
-        } else {
-            foreach($tables as $key => $table) {
-                if ($key === array_key_first($tables)) {
-                    $query = $this->DB->table($table);
-                } else {
-                    $query = $query->union($this->DB->table($table));
-                }
+        }
+
+        return $this->foreachTables($tables);
+    }
+
+    public function where($tables, $column, $operator = null, $value = null, $boolean = 'and') 
+    {
+        foreach($tables as $key => $table) {
+            if ($key === array_key_first($tables)) {
+                $query = $this
+                    ->DB
+                    ->table($table)
+                    ->where($column, $operator, $value, $boolean);
+            } else {
+                $query = $query->union(
+                        $this
+                        ->DB
+                        ->table($table)
+                        ->where($column, $operator, $value, $boolean)
+                    );
+            }
+        }
+
+        return $query;
+    }
+
+    private function foreachTables($tables)
+    {
+        foreach($tables as $key => $table) {
+            if ($key === array_key_first($tables)) {
+                $query = $this->DB->table($table);
+            } else {
+                $query = $query->union($this->DB->table($table));
             }
         }
 

@@ -15,7 +15,7 @@ class DestinyController extends Controller
     {
     	$DB = new DBHelper($lang);
 
-    	dd($DB->tables('*')->get());
+    	$items = $DB->where($DB->getAllTableNames(), 'json->displayProperties->hasIcon', true)->paginate(24);
 
     	return view('index', compact('items'));
     }

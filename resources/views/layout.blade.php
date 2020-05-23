@@ -5,10 +5,8 @@
 	<title>@yield('title')</title>
 	<link rel="stylesheet" href="{{ mix('css/app.css') }}">
 </head>
-<body>
+<body class="bg-dark">
 	@yield('content')
-
-	
 
 	<script src="{{ mix('js/app.js') }}"></script>
 	@stack('scripts')
