@@ -1,0 +1,17 @@
+.card.item-card {
+	.card-title {
+		font-size: .9rem;
+	}
+
+	.card-description {
+		line-height: 1;
+		margin-top: .75rem;
+		margin-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	img {
+		max-width: 80px;
+		max-height: 80px;
+	}
+}
