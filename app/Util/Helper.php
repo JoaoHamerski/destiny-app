@@ -24,7 +24,7 @@ class Helper
 	    if (! is_dir($dir)) {
 	        mkdir($dir, 0777, true);
 	    }
-	   
+	   	
 	    file_put_contents($fullPath, $contents, $flags);
 	}
 

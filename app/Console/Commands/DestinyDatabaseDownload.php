@@ -75,6 +75,8 @@ class DestinyDatabaseDownload extends Command
                 ['lang' => $lang],
                 ['filename' => ApiManager::getDatabaseFilename($dbFilepath)]
             );
+
+            // die();
         }
 
         $bar->finish();
