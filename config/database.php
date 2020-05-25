@@ -143,8 +143,8 @@ return [
     ],
 
     'sqlite' => [
-        'storage_path' => env('SQLITE_STORAGE_PATH'),
-        'cache_path' => env('SQLITE_CACHE_PATH'),
+        'storage_dir' => env('SQLITE_DIR_STORAGE'),
+        'cache_dir' => env('SQLITE_DIR_CACHE'),
     ],
 
 ];

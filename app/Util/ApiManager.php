@@ -28,12 +28,12 @@ class ApiManager
 	{
 		$this->client = resolve(\GuzzleHttp\Client::class);
 		$this->storagePath = $this->isCLI() 
-			? $_SERVER['PWD'] . config('database.sqlite.storage_path')
-			: $_SERVER['DOCUMENT_ROOT'] . '/..' . config('database.sqlite.storage_path');
+			? $_SERVER['PWD'] . config('database.sqlite.storage_dir')
+			: $_SERVER['DOCUMENT_ROOT'] . '/..' . config('database.sqlite.storage_dir');
 
 		$this->cachePath = $this->isCLI() 
-			? $_SERVER['PWD'] . config('database.sqlite.cache_path')
-			: $_SERVER['DOCUMENT_ROOT'] . '/..' .  config('database.sqlite.cache_path');
+			? $_SERVER['PWD'] . config('database.sqlite.cache_dir')
+			: $_SERVER['DOCUMENT_ROOT'] . '/..' .  config('database.sqlite.cache_dir');
 	}
 
 	/**
@@ -69,9 +69,9 @@ class ApiManager
 		return $this->cachePath . "$lang/";
 	}
 
-	public function getFilepath($storagePath, $databaseFilepath) 
+	public function getFilepath($lang, $databaseFilepath) 
 	{
-		return $storagePath . $this->getDatabaseFilename($databaseFilepath) . '.zip';
+		return $this->getStoragePath($lang) . $databaseFilepath . '.zip';
 	}	
 
 	/**
@@ -107,17 +107,12 @@ class ApiManager
 	public function getDatabaseFilepaths() 
 	{
 		$manifest = $this->getManifest();
+		$filepaths = (array) $manifest->Response->mobileWorldContentPaths;
 
-		return $manifest->Response->mobileWorldContentPaths;
+		return $filepaths;
 	}
 
-	/**
-	 * Retorna o nome do arquivo do banco de dados
-	 * 
-	 * @param  string $filepath 
-	 * @return string
-	 */
-	public static function getDatabaseFilename(string $filepath) 
+	public function getFilename($filepath) 
 	{
 		return \Str::afterLast($filepath, '/');
 	}

@@ -12,7 +12,6 @@ class DBHelper
      * 
      * @var  string
      */
-    private $lang;
 
     /**
      * Instancia da ApiManager
@@ -28,13 +27,10 @@ class DBHelper
      */
     private $DB;
 
-    private $query;
-
     public function __construct($lang)
     {
         $this->apiManager = new ApiManager();
-        $this->lang = $lang;
-        $this->setDatabaseFile($lang);
+        $this->setLanguage($lang);
         $this->DB = DB::connection('sqlite');
     }
 
@@ -53,8 +49,10 @@ class DBHelper
      * 
      * @param string $lang linguagem
      */
-    public function setDatabaseFile($lang) 
+    public function setLanguage($lang) 
     {
+        \App::setLocale($lang);
+        
         config(['database.connections.sqlite.database' => $this->getDatabaseFilepath($lang)]);
     }
 
@@ -67,7 +65,15 @@ class DBHelper
      */
     public function getDatabaseFilepath($lang) 
     {
-        return $this->apiManager->getCachePath($lang) . Database::where('lang', $lang)->first()->filename;
+        $cachePath = $this
+            ->apiManager
+            ->getCachePath($lang);
+
+        $filename = Database::where('lang', $lang)
+            ->first()
+            ->filename;
+
+        return $cachePath . $filename;
     }
 
     /**
@@ -114,8 +120,24 @@ class DBHelper
         return $this->foreachTables($tables);
     }
 
+    /**
+     * Retorna um where de uma ou várias tabelas
+     * unidas
+     * 
+     * @param  string|array $tables  
+     * @param  \Closure|string|array  $column
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     * @param  string  $boolean
+     * 
+     * @return Illuminate\Database\Query\Builder
+     */
     public function where($tables, $column, $operator = null, $value = null, $boolean = 'and') 
     {
+        if ($tables === "*") {
+            $tables = $this->getAllTableNames();
+        }
+
         foreach($tables as $key => $table) {
             if ($key === array_key_first($tables)) {
                 $query = $this
@@ -135,6 +157,14 @@ class DBHelper
         return $query;
     }
 
+    /**
+     * Itera sobre várias tabelas
+     * fazendo uma união entre elas.
+     * 
+     * @param  array $tables
+     * 
+     * @return Illuminate\Database\Query\Builder
+     */
     private function foreachTables($tables)
     {
         foreach($tables as $key => $table) {
@@ -148,8 +178,23 @@ class DBHelper
         return $query;
     }
 
+    public function getTableNameByHash($hash) 
+    {
+        $tables = $this->getAllTableNames();
+
+        foreach($tables as $table) {
+            if ($this->DB->table($table)->where('json->hash', $hash)->exists()) {
+                $str = \Str::of($table)->replace(['Destiny', 'Definition'], '');
+
+                return trim(implode(' ', preg_split('/(?=[A-Z])/', (string) $str)));
+            }
+        }
+
+        return 'No table';
+    }
+
     /**
-     * Converte um valor hash para id da tabela.
+     * Converte um valor "hash" para "id" da tabela.
      * 
      * @param  numeric $hash
      * @return int

@@ -46,25 +46,23 @@ class DestinyDatabaseDownload extends Command
             die();
         }
 
-        $dbURI = 'https://www.bungie.net';
         $dbFilepaths = $apiManager->getDatabaseFilepaths();
 
-        $bar = $this->output->createProgressbar(count((array) $dbFilepaths));
+        $bar = $this->output->createProgressbar(count($dbFilepaths));
 
-        foreach($dbFilepaths as $lang => $dbFilepath) {
-
-            $storagePath = $apiManager->getStoragePath($lang);
-            $filePath = $apiManager->getFilepath($storagePath, $dbFilepath);
+        foreach($dbFilepaths as $lang => $filepath) {
+            $filename = $apiManager->getFilename($filepath);
+            $storageFilepath = $apiManager->getStoragePath($lang) . $filename . '.zip';
 
             $this->line('');
             $bar->advance();
-            
             $this->info("Downloading \"$lang\" database file...");
-            \Helper::file_fput_contents($filePath, file_get_contents($dbURI . $dbFilepath));
+
+            \Helper::file_fput_contents($storageFilepath, file_get_contents('https://www.bungie.net/' . $filepath));
 
             $zip = new \ZipArchive();
 
-            if ($zip->open($filePath) === TRUE) {
+            if ($zip->open($storageFilepath) === TRUE) {
                 $zip->extractTo($apiManager->getCachePath($lang));
                 $zip->close();
             } else {
@@ -73,10 +71,8 @@ class DestinyDatabaseDownload extends Command
 
             \DB::table('databases')->updateOrInsert(
                 ['lang' => $lang],
-                ['filename' => ApiManager::getDatabaseFilename($dbFilepath)]
+                ['filename' => $filename]
             );
-
-            // die();
         }
 
         $bar->finish();
