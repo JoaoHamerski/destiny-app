@@ -13,4 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/{lang?}', 'DestinyController@index');
+Route::get('/', 'DestinyController@index');
+Route::get('/{hash}', 'DestinyController@show');

@@ -17,6 +17,40 @@
   max-height: 80px;
 }
 
+.card.item-card {
+  background-color: #6c757d;
+  transition: background-color 0.2s;
+}
+
+.card.item-card:hover {
+  z-index: 1;
+  cursor: pointer;
+  background-color: #4e6e8a;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.collapsible {
+  cursor: pointer;
+}
+
+.collapsible.show:before {
+  transform: rotate(90deg);
+}
+
+.collapsible:before {
+  content: "\25BA";
+  display: inline-block;
+  font-size: 1.1rem;
+  margin-right: 0.15rem;
+  transition: transform 0.2s;
+}
+
+ul:not(:first-child) {
+  margin-left: 2rem;
+  overflow: hidden;
+  transition: max-height 0.2s;
+}
+
 /*!
  * Bootstrap v4.5.0 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
