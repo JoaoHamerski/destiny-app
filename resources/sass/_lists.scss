@@ -1,0 +1,24 @@
+.collapsible {
+	cursor: pointer;
+		
+	&.show:before {
+		transform: rotate(90deg);
+	}
+
+	&:before {
+		content: '►';
+		display: inline-block;
+		font-size: 1.1rem;
+		margin-right: .15rem;
+		transition: transform .2s;
+	}
+}
+
+
+ul {
+	&:not(:first-child) {
+		margin-left: 2rem;
+		overflow: hidden;
+		transition: max-height .2s;
+	}
+}
