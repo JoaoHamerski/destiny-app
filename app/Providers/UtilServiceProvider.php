@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Util\Helper;
+use App\Util\Resolve;
 use Illuminate\Support\ServiceProvider;
 
 class UtilServiceProvider extends ServiceProvider
@@ -16,6 +17,10 @@ class UtilServiceProvider extends ServiceProvider
     {
         $this->app->bind('helper', function() {
             return new Helper();
+        });
+
+        $this->app->bind('resolve', function() {
+            return new Resolve();
         });
     }
 
